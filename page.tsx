@@ -1,4 +1,4 @@
-import MagiaDoJSX from "./Components/MagiaDoJSX/MagiaDoJSX"
+import MagiaDoJSX from "../../Components/MagiaDoJSX/MagiaDoJSX"
 
 export default function page(){
   return(
