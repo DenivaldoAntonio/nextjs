@@ -1,32 +1,25 @@
-import tecnologias from '@/app/data/tecnologias.json';
 
 
-export default function Page() {
-    const tecnologias = [
-        "HTML",
-        "CSS",
-        "Tailwind CSS",
-        "JavaScript",
-        "TypeScript",
-        "JSON",
-        "API RESTful",
-        "Swagger",
-        "GitHub",
-        "Codespaces",
-        "GitHub Pages",
-        "React.js",
-        "Next.js",
-        "Vercel"
-    ];
+import {tecnologias} from '@/data/tecnologias'
+import Tecnologia from '@/components/tecnologia/tecnologia'
 
-    return (
-        <div>
-            <h2>Tecnologias Exploradas</h2>
+export default function TecnologiaPage(){
+
+    return(
+        <>
+            <h2>Lista de Tecnologias</h2>
+
             <ul>
                 {tecnologias.map((tecnologia, i) => (
-                    <li key={i}>{tecnologia}</li>
+                    <Tecnologia 
+                        key={i}
+                        titulo={tecnologia.titulo}
+                        descricao={tecnologia.descricao}                        
+                    />
                 ))}
+
             </ul>
-        </div>
-    );
+        </>
+    )
+
 }
