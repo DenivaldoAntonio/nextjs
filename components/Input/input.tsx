@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from "react";
 
 export default function Input() {
@@ -7,7 +9,6 @@ export default function Input() {
     <div className="p-6 space-y-4">
       <h1 className="text-xl font-bold">Página Input</h1>
 
-      {/* Input que atualiza o estado */}
       <input
         type="text"
         className="border p-2 rounded w-full"
