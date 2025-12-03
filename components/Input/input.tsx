@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function PaginaInput() {
+export default function Input() {
   const [texto, setTexto] = useState("");
 
   return (
