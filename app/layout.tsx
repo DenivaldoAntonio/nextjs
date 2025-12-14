@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import  Relogio from "@/components/Relogio/relogio";
 
 const data = new Date()
 
@@ -38,7 +39,7 @@ export default function RootLayout({
             <Link href="/tecnologias">Tecnologias</Link>
             <Link href="/contador">Contador</Link>
             <Link href="/input">Input</Link>
-
+            <Link href="/DEISIshop/Produtos">Produtos</Link>
           </nav>
         </header>
 
@@ -46,7 +47,10 @@ export default function RootLayout({
           {children}
         </main>
 
-        <footer>DIW {data.getFullYear()}</footer>
+<footer className="flex items-center gap-3">
+  <span>DIW {data.getFullYear()}</span>
+  < Relogio/>
+</footer>
 
       </body>
     </html>
