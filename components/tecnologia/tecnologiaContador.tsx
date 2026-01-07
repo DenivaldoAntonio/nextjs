@@ -1,4 +1,3 @@
-import ContadorPersonalizado from "./ContadorPersonalizado"
 
 export default function TecnologiaCard({
   title,
@@ -13,7 +12,7 @@ export default function TecnologiaCard({
       <p className="text-gray-700 text-sm">{description}</p>
 
       {/* Contador */}
-      <ContadorPersonalizado title={title} />
+     
     </div>
   )
 }
