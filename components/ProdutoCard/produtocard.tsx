@@ -1,120 +1,91 @@
-import { Rating } from "@/models/interfaces";
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-
-export interface ProductProps {
-    id: number;
-    title: string;
-    price: number;
-    description: string;
-    category: string;
-    image: string;
-    rating: Rating;
-
-    onAddToCart?: (product: ProductProps) => void;
-    onRemoveFromCart?: (id: number) => void;          // −1 unidade
-    onRemoveAllFromCart?: (id: number) => void;       // remover tudo
-    isInCart?: boolean;
-    quantity?: number;
-}
+import { Product } from "@/models/interfaces";
 
 export default function ProdutoCard({
-    id,
-    title,
-    price,
-    description,
-    category,
-    image,
-    rating,
-    onAddToCart,
-    onRemoveFromCart,
-    onRemoveAllFromCart,
-    isInCart = false,
-    quantity
-}: ProductProps) {
+    produto,
+    onAdd,
+    onRemove
+}: {
+    produto: Product;
+    onAdd?: (p: Product) => void;
+    onRemove?: (id: number) => void;
+}) {
+    const [favorito, setFavorito] = useState<boolean>(false);
+
+    useEffect(() => {
+        const guardados = localStorage.getItem("favoritos");
+        if (guardados) {
+            const ids: number[] = JSON.parse(guardados);
+            setFavorito(ids.includes(produto.id));
+        }
+    }, [produto.id]);
+
+    function alternarFavorito() {
+        const guardados = localStorage.getItem("favoritos");
+        let ids: number[] = guardados ? JSON.parse(guardados) : [];
+
+        if (ids.includes(produto.id)) {
+            ids = ids.filter(id => id !== produto.id);
+            setFavorito(false);
+        } else {
+            ids.push(produto.id);
+            setFavorito(true);
+        }
+
+        localStorage.setItem("favoritos", JSON.stringify(ids));
+    }
 
     return (
-        <div className="bg-blue-600 text-white p-3 rounded-lg w-full max-w-xs mx-auto">
-            {/* TÍTULO */}
-            <h2 className="font-bold text-sm mb-1">{title}</h2>
+        <div className="border p-4 rounded flex flex-col gap-2">
 
-            {/* DESCRIÇÃO */}
-            <p className="text-xs mb-1 line-clamp-2">{description}</p>
+            {/* Favorito */}
+            <button
+                onClick={alternarFavorito}
+                className="self-end text-2xl"
+                aria-label="Favorito"
+            >
+                {favorito ? "❤️" : "🤍"}
+            </button>
 
-            {/* PREÇO */}
-            <p className="text-sm font-semibold mb-2">{price} €</p>
+            {/* Imagem */}
+            <Image
+                src={`https://deisishop.pythonanywhere.com${produto.image}`}
+                alt={produto.title}
+                width={150}
+                height={150}
+            />
 
-            {/* CARRINHO */}
-            {isInCart && quantity !== undefined && (
-                <>
-                    {/* + / − */}
-                    <div className="flex items-center justify-center gap-2 mb-1">
-                        <button
-                            className="bg-red-500 px-2 rounded"
-                            onClick={() => onRemoveFromCart?.(id)}
-                        >
-                            −
-                        </button>
+            <h3 className="font-semibold">{produto.title}</h3>
+            <p>{produto.price} €</p>
 
-                        <span className="font-bold text-sm">{quantity}</span>
+            {/* Botão +info */}
+            <Link
+                href={`/DEISIshop/produtos/${produto.id}`}
+                className="text-blue-500 underline text-sm"
+            >
+                + info
+            </Link>
 
-                        <button
-                            className="bg-green-500 px-2 rounded"
-                            onClick={() =>
-                                onAddToCart?.({
-                                    id,
-                                    title,
-                                    price,
-                                    description,
-                                    category,
-                                    image,
-                                    rating
-                                })
-                            }
-                        >
-                            +
-                        </button>
-                    </div>
-
-                    {/* REMOVER PRODUTO */}
-                    <button
-                        className="bg-gray-800 w-full py-1 text-xs rounded"
-                        onClick={() => onRemoveAllFromCart?.(id)}
-                    >
-                        Remover produto
-                    </button>
-                </>
+            {onAdd && (
+                <button
+                    onClick={() => onAdd(produto)}
+                    className="bg-blue-500 text-white p-1 rounded"
+                >
+                    Adicionar
+                </button>
             )}
 
-            {/* FORA DO CARRINHO */}
-            {!isInCart && (
-                <div className="flex gap-2 mt-2">
-                    {/* ADICIONAR */}
-                    {onAddToCart && (
-                        <button
-                            className="bg-white text-black flex-1 py-1 text-xs rounded"
-                            onClick={() =>
-                                onAddToCart({
-                                    id,
-                                    title,
-                                    price,
-                                    description,
-                                    category,
-                                    image,
-                                    rating
-                                })
-                            }
-                        >
-                            Adicionar
-                        </button>
-                    )}
-
-                    {/* +INFO */}
-                    <Link href={`/produtos/${id}`} className="flex-1">
-                        <button className="bg-gray-200 text-black w-full py-1 text-xs rounded">
-                            +info
-                        </button>
-                    </Link>
-                </div>
+            {onRemove && (
+                <button
+                    onClick={() => onRemove(produto.id)}
+                    className="bg-red-500 text-white p-1 rounded"
+                >
+                    Remover
+                </button>
             )}
         </div>
     );

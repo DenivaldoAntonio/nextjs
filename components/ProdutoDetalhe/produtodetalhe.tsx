@@ -1,35 +1,54 @@
-import { ProductProps } from "@/components/ProdutoCard/produtocard";
-import Link from "next/link";
+"use client";
 
-interface Props {
-    produto: ProductProps;
-}
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Product } from "@/models/interfaces";
 
-export default function ProdutoDetalhe({ produto }: Props) {
+export default function ProdutoDetalhe({ produto }: { produto: Product }) {
+    const [favorito, setFavorito] = useState(false);
+
+    useEffect(() => {
+        const guardados = localStorage.getItem("favoritos");
+        if (guardados) {
+            const ids = JSON.parse(guardados);
+            setFavorito(ids.includes(produto.id));
+        }
+    }, [produto.id]);
+
+    function alternarFavorito() {
+        const guardados = localStorage.getItem("favoritos");
+        let ids: number[] = guardados ? JSON.parse(guardados) : [];
+
+        if (ids.includes(produto.id)) {
+            ids = ids.filter((id) => id !== produto.id);
+            setFavorito(false);
+        } else {
+            ids.push(produto.id);
+            setFavorito(true);
+        }
+
+        localStorage.setItem("favoritos", JSON.stringify(ids));
+    }
+
     return (
-        <div className="p-4">
-            <h1>{produto.title}</h1>
+        <div className="border p-6 rounded flex flex-col gap-4 items-center">
 
-            <img src={produto.image} alt={produto.title} width={300} />
+            <button onClick={alternarFavorito} className="text-2xl">
+                {favorito ? "Coracao vermelho" : "Coracao branco"}
+            </button>
 
-            <p><strong>ID:</strong> {produto.id}</p>
-            <p><strong>Preço:</strong> {produto.price}</p>
-            <p><strong>Categoria:</strong> {produto.category}</p>
+            <Image
+                src={produto.image}
+                alt={produto.title}
+                width={250}
+                height={250}
+            />
 
-            <p><strong>Descrição:</strong></p>
+
+            <h2>{produto.title}</h2>
             <p>{produto.description}</p>
+            <p>{produto.price} €</p>
 
-            <p>
-                <strong>Avaliação:</strong>{" "}
-                {produto.rating.rate} ⭐ ({produto.rating.count})
-            </p>
-
-            {/* botão voltar */}
-            <Link href="/produtos">
-                <button className="mt-4 bg-blue-600 text-white px-3 py-1">
-                    Voltar aos produtos
-                </button>
-            </Link>
         </div>
     );
 }
