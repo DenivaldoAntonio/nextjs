@@ -4,8 +4,6 @@ import "./globals.css";
 import Link from "next/link";
 import Relogio from "@/components/Relogio/relogio";
 
-const data = new Date()
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,12 +21,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className='flex flex-col justify-start gap-4 p-20 items-center min-h-screen'>
+      <body className="flex flex-col justify-start gap-4 p-20 items-center min-h-screen">
 
         <header className="flex flex-col items-center">
           <h1>React & Next.js</h1>
@@ -41,7 +39,6 @@ export default function RootLayout({
             <Link href="/input">Input</Link>
             <Link href="/DEISIshop/produtos">Produtos</Link>
             <Link href="/Paises">Paises</Link>
-
           </nav>
         </header>
 
@@ -50,8 +47,8 @@ export default function RootLayout({
         </main>
 
         <footer className="flex items-center gap-3">
-          <span>DIW {data.getFullYear()}</span>
-          < Relogio />
+          <span>DIW {new Date().getFullYear()}</span>
+          <Relogio />
         </footer>
 
       </body>
